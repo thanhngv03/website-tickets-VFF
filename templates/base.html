@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Liên đoàn Bóng đá Việt Nam - Bán Vé{% endblock %}</title>
+    
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+   <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="w-12 h-12" />
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            z-index: 10;
+        }
+
+        [data-tooltip]:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-roboto min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-red-600 text-white p-4 shadow">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="{% static 'images/logo.jpg' %}" alt="Vietnam Football Federation logo" class="w-12 h-12 object-cover rounded-full" />
+                <h1 class="text-2xl font-bold">Liên đoàn Bóng đá Việt Nam</h1>
+            </div>
+            <nav>
+                <ul class="flex space-x-4 text-sm md:text-base">
+                    <li><a href="{% url 'match_list' %}" class="hover:underline">Trang chủ</a></li>
+                    <li><a href="#" class="hover:underline">Trận đấu</a></li>
+                    <li><a href="{% url 'my_tickets' %}" class="hover:underline">Vé của tôi</a></li>
+                    <li><a href="#" class="hover:underline">Hỗ trợ</a></li>
+                </ul>
+            </nav>
+            <div class="flex space-x-4 text-sm md:text-base">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:profile' %}" class="hover:underline">Hồ sơ</a>
+                    <a href="{% url 'accounts:logout' %}" class="hover:underline">Đăng xuất</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="hover:underline">Đăng nhập</a>
+                    <a href="{% url 'accounts:register' %}" class="hover:underline">Đăng ký</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Thông báo hệ thống -->
+    {% if messages %}
+        <div class="container mx-auto my-4">
+            {% for message in messages %}
+                <div class="p-4 rounded-lg text-sm
+                    {% if message.tags == 'error' %}
+                        bg-red-100 text-red-700
+                    {% elif message.tags == 'success' %}
+                        bg-green-100 text-green-700
+                    {% else %}
+                        bg-blue-100 text-blue-700
+                    {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Nội dung chính -->
+    <main class="flex-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>© 2025 Liên đoàn Bóng đá Việt Nam. Bản quyền thuộc về VFF (2121050666).</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="https://www.facebook.com/vietnamesefootball?locale=vi_VN" class="hover:text-gray-400 relative group" target="_blank" data-tooltip="Theo dõi chúng tôi trên Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.youtube.com/channel/UCndcERoL9eG-XNljgUk1Gag" class="hover:text-gray-400 relative group" target="_blank" data-tooltip="Theo dõi chúng tôi trên YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript thêm -->
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,25 @@
+/* static/css/styles.css */
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.fancy {
+    display: inline-block;
+    position: relative;
+    padding: 10px 20px;
+    background-color: #dc2626;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background 0.3s;
+    text-align: center;
+}
+
+.fancy:hover {
+    background-color: #b91c1c;
+}
+
+.top-key, .bottom-key-1, .bottom-key-2 {
+    display: none; /* Placeholder: tùy chỉnh nếu bạn cần hiệu ứng */
+}

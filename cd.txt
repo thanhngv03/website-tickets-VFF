@@ -1,0 +1,10 @@
+JSscripts "jquerry cdn link"
+CSS Bootstrap 
+Lấy phần body của trang web Vào thanh tìm kiểm trong bootstrap "Nav"
+
+
+django-admin startapp app
+python manage.py migrate 
+python manage.py runserver 
+pip install -r requirements.txt
+pip install qrcode[pil](Cai dat thu vien QR code)

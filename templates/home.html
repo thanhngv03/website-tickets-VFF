@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Liên đoàn Bóng đá Việt Nam - Bán Vé{% endblock %}
+
+{% block content %}
+<main class="container mx-auto mt-8 p-4">
+
+    <!-- Lọc trận đấu theo ngày -->
+    <section class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold mb-4">Chọn ngày trận đấu</h2>
+        <div class="flex items-center space-x-4 mb-4">
+            <label for="start-date" class="text-gray-700 font-bold">Từ:</label>
+            <input type="date" id="start-date" class="border border-gray-300 p-2 rounded-lg" />
+            <label for="end-date" class="text-gray-700 font-bold">Đến:</label>
+            <input type="date" id="end-date" class="border border-gray-300 p-2 rounded-lg" />
+            <button onclick="checkMatches()" class="bg-red-600 text-white px-4 py-2 rounded-lg">Kiểm tra trận đấu</button>
+        </div>
+        <div id="match-results" class="mt-4 text-sm text-gray-800"></div>
+    </section>
+
+    <!-- Danh sách các trận đấu -->
+    <section class="bg-white p-6 rounded-lg shadow-lg mt-8">
+        <h2 class="text-3xl font-bold mb-4">Lịch thi đấu của đội tuyển Việt Nam tại vòng loại Asian Cup 2027</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for match in matches %}
+                <div class="bg-gray-200 p-4 rounded-lg">
+                    <img src="{{ match.image.url }}" alt="Match Image" class="w-full h-48 object-cover rounded-lg mb-4" />
+                    <h3 class="text-xl font-bold">{{ match.title }}</h3>
+                    <p class="text-gray-700">Date: {{ match.date|date:"d/m/Y" }}</p>
+                    <p class="text-gray-700">Location: {{ match.location }}</p>
+                    <a class="fancy mt-4" href="{% url 'choose_seat' match.id %}">
+                        <span class="top-key"></span>
+                        <span class="text">Mua vé</span>
+                        <span class="bottom-key-1"></span>
+                        <span class="bottom-key-2"></span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Modal hiển thị thông tin vé -->
+    <div id="ticketModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl flex">
+            <!-- Phần thông tin sự kiện -->
+            <div class="w-1/3 bg-gray-800 text-white p-6 rounded-l-lg">
+                <h2 id="modal-match-title" class="text-2xl font-bold mb-4"></h2>
+                <div class="mb-4">
+                    <p id="modal-match-date" class="text-sm flex items-center"></p>
+                    <p id="modal-match-location" class="text-sm flex items-center"></p>
+                </div>
+                <div class="mb-4">
+                    <p id="modal-ticket-price" class="text-lg font-bold"></p>
+                </div>
+                <button id="modal-action-button" class="bg-blue-600 text-white px-4 py-2 rounded-lg w-full">Mua vé ngay</button>
+            </div>
+            <!-- Hình ảnh sự kiện -->
+            <div class="w-2/3 p-6">
+                <img src="https://via.placeholder.com/600x400" alt="Event Poster" class="w-full h-auto rounded-lg" />
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function checkMatches() {
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const results = document.getElementById('match-results');
+
+        if (!startDate || !endDate) {
+            results.textContent = 'Vui lòng chọn đầy đủ ngày bắt đầu và ngày kết thúc.';
+            return;
+        }
+
+        if (new Date(startDate) > new Date(endDate)) {
+            results.textContent = 'Ngày bắt đầu không thể lớn hơn ngày kết thúc.';
+            return;
+        }
+
+        fetch(`/filter/?start=${startDate}&end=${endDate}`)
+            .then(response => response.json())
+            .then(data => {
+                results.innerHTML = '';
+                if (data.results && data.results.length > 0) {
+                    data.results.forEach(match => {
+                        const p = document.createElement('p');
+                        p.classList.add('mb-2');
+                        p.textContent = `${match.title} - Ngày: ${match.date} - Địa điểm: ${match.location}`;
+                        results.appendChild(p);
+                    });
+                } else {
+                    results.textContent = 'Không tìm thấy trận đấu nào trong khoảng thời gian đã chọn.';
+                }
+            })
+            .catch(err => {
+                results.textContent = 'Đã xảy ra lỗi khi tải dữ liệu.';
+            });
+    }
+
+    function openModal(matchTitle, matchDate, matchLocation, ticketPrice) {
+        const modal = document.getElementById('ticketModal');
+        document.getElementById('modal-match-title').textContent = matchTitle;
+        document.getElementById('modal-match-date').innerHTML = `<i class="fas fa-calendar-alt mr-2"></i> ${matchDate}`;
+        document.getElementById('modal-match-location').innerHTML = `<i class="fas fa-map-marker-alt mr-2"></i> ${matchLocation}`;
+        document.getElementById('modal-ticket-price').textContent = `Giá từ ${parseInt(ticketPrice).toLocaleString('vi-VN')} đ`;
+
+        const actionButton = document.getElementById('modal-action-button');
+        const today = new Date();
+        const eventDate = new Date(matchDate);
+        if (eventDate < today) {
+            actionButton.textContent = 'Sự kiện đã kết thúc';
+            actionButton.classList.add('bg-gray-500');
+            actionButton.classList.remove('bg-blue-600');
+            actionButton.disabled = true;
+        } else {
+            actionButton.textContent = 'Mua vé ngay';
+            actionButton.classList.remove('bg-gray-500');
+            actionButton.classList.add('bg-blue-600');
+            actionButton.disabled = false;
+        }
+
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('ticketModal').classList.add('hidden');
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('ticketModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+</script>
+{% endblock %}
