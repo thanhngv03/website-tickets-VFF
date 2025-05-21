@@ -23,3 +23,7 @@ body {
 .top-key, .bottom-key-1, .bottom-key-2 {
     display: none; /* Placeholder: tùy chỉnh nếu bạn cần hiệu ứng */
 }
+button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

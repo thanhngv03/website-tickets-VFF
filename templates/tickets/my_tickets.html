@@ -1,26 +1,45 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load static humanize %}
 
 {% block title %}Vé của tôi{% endblock %}
 
 {% block content %}
-<main class="container mx-auto my-8">
-    <h2 class="text-2xl font-bold mb-6">Danh sách vé đã đặt</h2>
+<div class="container mx-auto px-4 mt-10 space-y-6">
+    <h2 class="text-3xl font-bold mb-6">🎟️ Vé đã đặt</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% if tickets %}
         {% for ticket in tickets %}
-        <div class="bg-white shadow-lg rounded-lg p-4">
-            <h3 class="text-xl font-bold">{{ ticket.match.title }}</h3>
-            <p class="text-gray-600">Ngày: {{ ticket.match.date }}</p>
-            <p class="text-gray-600">Địa điểm: {{ ticket.match.location }}</p>
-            <p class="text-gray-600">Ghế: {{ ticket.seat.seat_number }}</p>
-            <p class="text-gray-600">Đặt lúc: {{ ticket.booked_at|date:"d/m/Y H:i" }}</p>
-            {% if ticket.qr_code %}
-                <img src="{{ ticket.qr_code.url }}" alt="QR Code" class="w-32 h-32 mt-4">
-            {% else %}
-                <p class="text-red-500 mt-4">QR chưa được tạo.</p>
-            {% endif %}
+        <div class="bg-gray-800 text-white rounded-lg shadow-lg flex flex-col md:flex-row overflow-hidden">
+            <!-- Left: Info -->
+            <div class="w-full md:w-1/2 p-6 space-y-4 bg-gray-900">
+                <h3 class="text-xl font-bold text-white">
+                    {{ ticket.match.title }}
+                </h3>
+                <p><i class="fas fa-calendar-alt mr-2"></i><span class="text-green-400 font-semibold">{{ ticket.match.date|date:"H:i - d/m/Y" }}</span></p>
+                <p><i class="fas fa-map-marker-alt mr-2"></i>SVĐ Gò Đậu</p>
+                <p class="text-sm text-gray-300 pl-6">Đường 30 tháng 4, Phường Phú Thọ, Thủ Dầu Một, Bình Dương, Việt Nam</p>
+                
+                <hr class="border-gray-600" />
+
+                <p><strong>Ghế:</strong> {{ ticket.seat.get_seat_number_display }}</p>
+                
+                
+                {% if ticket.qr_code %}
+                <div class="mt-4">
+                    <img src="{{ ticket.qr_code.url }}" alt="QR Code" class="w-32 h-32 bg-white rounded shadow" />
+                    <p class="text-xs mt-1 text-gray-400">Mã QR xác nhận</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Right: Image -->
+            <div class="w-full md:w-1/2 h-auto">
+                <img src="{% static 'images/vietnam_team.jpg' %}" alt="Đội tuyển Việt Nam" class="w-full h-full object-cover" />
+            </div>
         </div>
         {% endfor %}
-    </div>
-</main>
+    {% else %}
+        <p>Bạn chưa đặt vé nào.</p>
+    {% endif %}
+</div>
 {% endblock %}

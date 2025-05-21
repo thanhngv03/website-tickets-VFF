@@ -8,6 +8,9 @@ def home(request):
     matches = Match.objects.all().order_by('date')
     return render(request, "home.html", {"matches": matches})
 
+def register(request):
+    return render(request, 'register.html')
+
 
 def filter_matches(request):
     start = request.GET.get('start')
