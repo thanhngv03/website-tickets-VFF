@@ -9,6 +9,6 @@ admin.site.site_title = "VFF Ticket Admin"
 admin.site.index_title = "Trang quản lý hệ thống vé"
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('title', 'date', 'location', 'ticket_price')
+    list_display =  ('title', 'date', 'start_time', 'is_open_for_sale')
     search_fields = ('title', 'location')
     list_filter = ('date',)
