@@ -2,6 +2,9 @@ JSscripts "jquerry cdn link"
 CSS Bootstrap 
 Lấy phần body của trang web Vào thanh tìm kiểm trong bootstrap "Nav"
 
+#Chạy môi trường ảo 
+python -m venv venv  
+venv\Scripts\activate
 
 django-admin startapp app
 python manage.py migrate 

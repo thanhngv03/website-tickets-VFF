@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 {% load humanize %}
 {% block title %}Liên đoàn Bóng đá Việt Nam - Bán Vé{% endblock %}
-
+{% load static %}
 {% block content %}
 <main class="container mx-auto mt-8 p-4">
 
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+    <img src="{% static 'images/bgr_vnteam.jpg' %}" alt="Đội tuyển quốc gia Việt Nam"
+          class="w-full h-[350px] object-cover rounded-lg shadow hover:shadow-xl transition duration-300" />
+</div>
     <!-- Lọc trận đấu theo ngày -->
     <section class="bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-3xl font-bold mb-4">Chọn ngày trận đấu</h2>
+        <h2 class="text-3xl font-bold mb-4">Chọn ngày diễn ra trận đấu</h2>
         <div class="flex items-center space-x-4 mb-4">
             <label for="start-date" class="text-gray-700 font-bold">Từ:</label>
             <input type="date" id="start-date" class="border border-gray-300 p-2 rounded-lg" />
