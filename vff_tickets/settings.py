@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     "users",
     "matches",
     "tickets",
+    'payments',
     'django.contrib.humanize',
+    
 ]
 
 MIDDLEWARE = [

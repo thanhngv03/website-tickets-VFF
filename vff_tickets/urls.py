@@ -25,6 +25,7 @@ urlpatterns = [
     path("users/", include("users.urls")),
     path("tickets/", include("tickets.urls")),
     path('accounts/', include('app.accounts.urls', namespace='accounts')),
+    path("payments/", include("payments.urls", namespace="payments")),
 ]
 
 if settings.DEBUG:

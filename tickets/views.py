@@ -23,11 +23,15 @@ def choose_seat(request, match_id):
         seat = get_object_or_404(Seat, id=seat_id, is_booked=False)
         seat.is_booked = True
         seat.save()
-        Ticket.objects.create(user=request.user, match=match, seat=seat)
-        return redirect("ticket_success")
+
+        # ✅ Gán vào biến ticket để lấy ID
+        ticket = Ticket.objects.create(user=request.user, match=match, seat=seat)
+
+        return redirect("payments:checkout", ticket_id=ticket.id)
 
     # Nhóm ghế theo khán đài
     seat_sections = sorted(set(seats.values_list('seat_number', flat=True)))
+    from collections import defaultdict
     seats_by_section = defaultdict(list)
     for seat in seats:
         seats_by_section[seat.seat_number].append(seat)
