@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Liên đoàn Bóng đá Việt Nam - Bán Vé{% endblock %}</title>
-    
-    <!-- TailwindCSS CDN -->
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Font Awesome -->
@@ -16,72 +16,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
 
     <!-- Custom CSS -->
-   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-   <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="w-12 h-12" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <style>
         body {
             font-family: 'Roboto', sans-serif;
         }
-
-        [data-tooltip]::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            background: rgba(0, 0, 0, 0.75);
-            color: white;
-            padding: 4px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease-in-out;
-            z-index: 10;
-        }
-
-        [data-tooltip]:hover::after {
-            opacity: 1;
-        }
     </style>
 </head>
+
 <body class="bg-gray-100 font-roboto min-h-screen flex flex-col">
 
     <!-- Header -->
     <header class="bg-red-600 text-white p-4 shadow">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <img src="{% static 'images/logo.jpg' %}" alt="Vietnam Football Federation logo" class="w-12 h-12 object-cover rounded-full" />
+                <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="w-12 h-12 object-cover rounded-full" />
                 <h1 class="text-2xl font-bold">Liên đoàn Bóng đá Việt Nam</h1>
             </div>
-            <nav>
-                <ul class="flex space-x-4 text-sm md:text-base">
-                    <li><a href="{% url 'match_list' %}" class="hover:underline">Trang chủ</a></li>
-                    <li><a href="#" class="hover:underline">Trận đấu</a></li>
-                    <li><a href="{% url 'my_tickets' %}" class="hover:underline">Vé của tôi</a></li>
-                    <li><a href="#" class="hover:underline">Hỗ trợ</a></li>
-                </ul>
-            </nav>
-            <div class="flex space-x-4 text-sm md:text-base">
+            <nav class="flex items-center space-x-4">
+                <a href="{% url 'match_list' %}" class="hover:underline">Trang chủ</a>
+                <a href="#" class="hover:underline">Trận đấu</a>
+                <a href="{% url 'my_tickets' %}" class="hover:underline">Vé của tôi</a>
+                <a href="#" class="hover:underline">Hỗ trợ</a>
+
                 {% if user.is_authenticated %}
                     <a href="{% url 'accounts:profile' %}" class="hover:underline">Hồ sơ</a>
-                    <a href="{% url 'accounts:logout' %}" class="hover:underline">Đăng xuất</a>
+                    <form method="post" action="{% url 'accounts:logout' %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="hover:underline">Đăng xuất</button>
+                    </form>
                 {% else %}
                     <a href="{% url 'accounts:login' %}" class="hover:underline">Đăng nhập</a>
                     <a href="{% url 'accounts:register' %}" class="hover:underline">Đăng ký</a>
                 {% endif %}
-            </div>
+            </nav>
         </div>
     </header>
 
-    <!-- Thông báo hệ thống -->
+    <!-- Flash messages -->
     {% if messages %}
-        <div class="container mx-auto my-4">
+        <div class="container mx-auto mt-4">
             {% for message in messages %}
-                <div class="p-4 rounded-lg text-sm
+                <div class="p-4 rounded-lg text-sm my-2
                     {% if message.tags == 'error' %}
                         bg-red-100 text-red-700
                     {% elif message.tags == 'success' %}
@@ -95,76 +72,59 @@
         </div>
     {% endif %}
 
-    <!-- Nội dung chính -->
+    <!-- Main Content -->
     <main class="flex-1">
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-     <footer class="bg-red-700 text-white mt-12">
-  <div class="container mx-auto py-10 px-4 md:flex justify-between gap-6">
-    
-    <!-- Logo -->
-    <div class="mb-6 md:mb-0">
-      <img src="{% static 'images/logo.jpg' %}" alt="VFF Logo" class="w-24 mb-4">
-    </div>
+    <footer class="bg-red-700 text-white mt-12">
+        <div class="container mx-auto py-10 px-4 md:flex justify-between gap-6">
+            
+            <!-- Logo -->
+            <div class="mb-6 md:mb-0">
+                <img src="{% static 'images/logo.jpg' %}" alt="VFF Logo" class="w-24 mb-4">
+            </div>
 
-    <!-- Điều hướng -->
-    <div>
-      <h4 class="font-bold text-lg mb-2">ĐIỀU HƯỚNG</h4>
-      <ul class="space-y-1 text-sm">
-        <li><a href="/" class="hover:underline">Trang chủ</a></li>
-        <li><a href="#" class="hover:underline">Lịch thi đấu</a></li>
-        <li><a href="#" class="hover:underline">Về chúng tôi</a></li>
-        <li><a href="#" class="hover:underline">Chính sách bán hàng</a></li>
-        <li><a href="#" class="hover:underline">Bảo mật thông tin</a></li>
-        <li><a href="#" class="hover:underline">Khiếu nại</a></li>
-      </ul>
-    </div>
+            <!-- Điều hướng -->
+            <div>
+                <h4 class="font-bold text-lg mb-2">ĐIỀU HƯỚNG</h4>
+                <ul class="space-y-1 text-sm">
+                    <li><a href="/" class="hover:underline">Trang chủ</a></li>
+                    <li><a href="#" class="hover:underline">Lịch thi đấu</a></li>
+                    <li><a href="#" class="hover:underline">Về chúng tôi</a></li>
+                    <li><a href="#" class="hover:underline">Chính sách bán hàng</a></li>
+                    <li><a href="#" class="hover:underline">Bảo mật thông tin</a></li>
+                    <li><a href="#" class="hover:underline">Khiếu nại</a></li>
+                </ul>
+            </div>
 
-    <!-- Liên hệ -->
-    <div>
-      <h4 class="font-bold text-lg mb-2">LIÊN HỆ</h4>
-      <p class="text-sm">LIÊN ĐOÀN BÓNG ĐÁ VIỆT NAM</p>
-      <p class="text-sm">Địa chỉ: Đ.Lê Quang Đạo, Mỹ Đình, Nam Từ Liêm, Hà Nội</p>
-      <p class="text-sm">Email: info@vff.org.vn</p>
-      <p class="text-sm">Điện thoại: 02466755362 – Hotline: 0963.835.162</p>
-      <div class="flex space-x-3 mt-3 text-xl">
-        <a href="https://www.facebook.com/vietnamesefootball?locale=vi_VN"><i class="fab fa-facebook-square"></i></a>
-        <a href="https://www.youtube.com/channel/UCndcERoL9eG-XNljgUk1Gag"><i class="fab fa-youtube"></i></a>
-      </div>
-    </div>
+            <!-- Liên hệ -->
+            <div>
+                <h4 class="font-bold text-lg mb-2">LIÊN HỆ</h4>
+                <p class="text-sm">LIÊN ĐOÀN BÓNG ĐÁ VIỆT NAM</p>
+                <p class="text-sm">Đường Lê Quang Đạo, Mỹ Đình, Nam Từ Liêm, Hà Nội</p>
+                <p class="text-sm">Email: info@vff.org.vn</p>
+                <p class="text-sm">Hotline: 0963.835.162</p>
+                <div class="flex space-x-3 mt-3 text-xl">
+                    <a href="https://www.facebook.com/vietnamesefootball?locale=vi_VN" target="_blank"><i class="fab fa-facebook-square"></i></a>
+                    <a href="https://www.youtube.com/channel/UCndcERoL9eG-XNljgUk1Gag" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
 
-    <!-- Giấy phép -->
-    <div>
-      <h4 class="font-bold text-lg mb-2">GIẤY PHÉP</h4>
-      
-      <img src="{% static 'images/bo_vhttdl.jpg' %}" alt="Bộ Văn hoá Thể thao và Du lịch" class="w-24 mt-2">
-    </div>
+            <!-- Giấy phép -->
+            <div>
+                <h4 class="font-bold text-lg mb-2">GIẤY PHÉP</h4>
+                <img src="{% static 'images/bo_vhttdl.jpg' %}" alt="Bộ Văn hoá Thể thao và Du lịch" class="w-24 mt-2">
+            </div>
+        </div>
 
-    <script type="text/javascript">
-        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-        (function () {
-            var chat = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
-            chat.async = true;
-            chat.src = 'https://embed.tawk.to/68308a180ff9cf190abe757f/1irupmsb8';
-            chat.charset = 'UTF-8';
-            chat.setAttribute('crossorigin', '*');
-            s0.parentNode.insertBefore(chat, s0);
-        })();
-    </script>
-
-  </div>
-    <footer class="bg-gray-800 text-white p-4 mt-8">
-        <div class="container mx-auto text-center">
-            <p>© 2025 Liên đoàn Bóng đá Việt Nam. Bản quyền thuộc về Nguyễn Văn Thanh (2121050666).</p>
-        
+        <div class="bg-gray-800 text-white p-4 text-center text-sm">
+            © 2025 Liên đoàn Bóng đá Việt Nam. Bản quyền thuộc về Nguyễn Văn Thanh (2121050666).
         </div>
     </footer>
 
-    <!-- JavaScript thêm -->
-    {% block scripts %}
-    {% endblock %}
+    <!-- Optional JS -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>

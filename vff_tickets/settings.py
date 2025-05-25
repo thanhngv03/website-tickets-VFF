@@ -116,12 +116,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "vi"
 
-TIME_ZONE = "UTC"
-
+TIME_ZONE = 'Asia/Ho_Chi_Minh'
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 
@@ -138,3 +137,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGOUT_REDIRECT_URL = '/'

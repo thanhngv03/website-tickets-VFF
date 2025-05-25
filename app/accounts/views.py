@@ -2,6 +2,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from .forms import CustomUserCreationForm
+from django.shortcuts import render, redirect
 
 @login_required
 def profile(request):
@@ -10,11 +12,10 @@ def profile(request):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Tài khoản đã được tạo thành công! Vui lòng đăng nhập.')
             return redirect('accounts:login')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'accounts/register.html', {'form': form})

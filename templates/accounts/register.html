@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
-{% block title %}Đăng ký{% endblock %}
-
 {% block content %}
-<div class="container mx-auto max-w-md bg-white p-6 rounded shadow mt-10">
-    <h2 class="text-2xl font-bold mb-4">Đăng ký tài khoản</h2>
-    <form method="post">
+<div class="max-w-md mx-auto bg-white p-6 rounded shadow mt-10">
+    <h2 class="text-2xl font-bold mb-4 text-center">Đăng ký tài khoản</h2>
+
+    <form method="POST" class="space-y-4">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Tạo tài khoản</button>
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <div>
+                <label class="block text-sm font-medium mb-1 text-gray-700">{{ field.label_tag }}</label>
+                {{ field }}
+                <p class="text-sm text-red-500">{{ field.errors }}</p>
+            </div>
+        {% endfor %}
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded">
+            Tạo tài khoản
+        </button>
     </form>
 </div>
 {% endblock %}

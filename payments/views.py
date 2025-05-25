@@ -21,7 +21,7 @@ def payment_checkout(request, ticket_id):
             payment.amount = ticket.price()
             payment.status = 'success'  # mô phỏng thành công
             payment.save()
-            return redirect('payment_success', payment_id=payment.id)
+            return redirect('payments:payment_success', payment_id=payment.id)
     else:
         form = PaymentForm()
 
