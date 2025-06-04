@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'vff_ticket_db',
         'USER': 'vff_user',
-        'PASSWORD': 'vff_pass',
+        'PASSWORD': 'thanhkhon123',
         'HOST': 'localhost',
         'PORT': '5432',
     }

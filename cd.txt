@@ -14,3 +14,6 @@ pip install qrcode[pil](Cai dat thu vien QR code)
 
 #Tạo ghế cho các trận đấu:(1-VN vs Lào,2-VN vs Nepal,3-VN vs Malaysia)
 python manage.py create_seats 3 
+
+#Tạo superuser
+python manage.py createsuperuser(thanhkhon03,thanhkhon123)

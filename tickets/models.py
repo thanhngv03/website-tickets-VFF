@@ -26,7 +26,7 @@ class Seat(models.Model):
         'C': 150000,
         'D': 150000,
     }
-
+    code = models.CharField(max_length=20, unique=False, blank=True, null=True)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     seat_number = models.CharField(max_length=2, choices=SEAT_CHOICES)
     is_booked = models.BooleanField(default=False)
